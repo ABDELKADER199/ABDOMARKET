@@ -12,61 +12,6 @@ use Twilio\Rest\Client;
 
 class InvoiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
     public function SaveInvoice(Request $request){
         $data = $request->validate([
             'invoices' => 'required|array',
@@ -100,13 +45,13 @@ class InvoiceController extends Controller
     }
 
     $file = $request->file('file');
-    $fileName = 'invoice_' . time() . '.pdf'; // إنشاء اسم فريد للملف
+    $fileName = 'invoice_' . date('y-m-d_h-i-s') . '.pdf'; // Create a unique file name
     $filePath = public_path('pdfs/' . $fileName);
 
-    // قم بحفظ الملف في public/pdfs
+    // Save the file to public/pdfs
     $file->move(public_path('pdfs'), $fileName);
 
-    $fileUrl = url('pdfs/' . $fileName); // الحصول على رابط URL للملف
+    $fileUrl = url('pdfs/' . $fileName); // Get the URL of the file
 
     return response()->json(['fileUrl' => $fileUrl], 200);
 }
@@ -123,18 +68,19 @@ public function sendInvoice(Request $request)
         return response()->json(['error' => 'File URL is required'], 400);
     }
 
-    // تحقق من أن الرابط صحيح
+    // Check that the link is correct.
     if (!filter_var($fileUrl, FILTER_VALIDATE_URL)) {
         return response()->json(['error' => 'Invalid file URL'], 400);
     }
 
-    // إعداد رسالة WhatsApp عبر Twilio
+    // Set up WhatsApp message via Twilio
     $twilio = new \Twilio\Rest\Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
     $message = $twilio->messages->create(
         'whatsapp:+201070276578', // رقم المستلم عبر WhatsApp
         [
             'from' => env('TWILIO_WHATSAPP_FROM'),
-            'body' => "Here is your invoice: $fileUrl"
+            'body' => "Here is your invoice:
+            $fileUrl"
         ]
     );
 

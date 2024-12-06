@@ -17,8 +17,8 @@ Route::get('locker', [LockerController::class, 'index']);
 Route::get('locker/{id}', [LockerController::class, 'show']);
 Route::post('locker/send-whatsapp', [InvoiceController::class, 'sendInvoice']);
 Route::post('locker/upload', [InvoiceController::class, 'uploadPDF']);
-
-
+Route::get('users' , [AuthController::class ,'getCurrentUser']);
+Route::post('login/face', [AuthController::class, 'loginWithFace']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix("product")->group(function () {
