@@ -79,7 +79,7 @@ class AuthController extends Controller
     }
     public function getCurrentUser(Request $request)
     {
-        $user = User::where('email', $request->email)->first(); // مثال: جلب المستخدم حسب البريد الإلكتروني
+        $user = $request->user();
         return response()->json($user);
     }
 

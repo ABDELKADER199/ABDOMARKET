@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HistoryReseiptController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LockerController;
 use App\Http\Controllers\ProductController;
@@ -17,8 +18,9 @@ Route::get('locker', [LockerController::class, 'index']);
 Route::get('locker/{id}', [LockerController::class, 'show']);
 Route::post('locker/send-whatsapp', [InvoiceController::class, 'sendInvoice']);
 Route::post('locker/upload', [InvoiceController::class, 'uploadPDF']);
-Route::get('users' , [AuthController::class ,'getCurrentUser']);
 Route::post('login/face', [AuthController::class, 'loginWithFace']);
+Route::get("historyReseipt", [HistoryReseiptController::class, 'index']); // هنا المسار
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix("product")->group(function () {
@@ -29,4 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete("/{id}", [ProductController::class, "destroy"]);
     });
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('/users' , [AuthController::class ,"getCurrentUser"]);
+
 });
